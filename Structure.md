@@ -12,9 +12,17 @@ cpu信息：pip install psutil
 
 ​	idle: cpu空闲时间百分比
 
+​	psutil.cpu_time()
+
+​	psutil.cpu_percent()
+
 内存信息
 
+​	psutil.virtual_memory()
+
 磁盘信息
+
+​	psutil.disk_usage('/')
 
 网络信息
 

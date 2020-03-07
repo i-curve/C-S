@@ -9,8 +9,8 @@ class Client:
 		self.client = sk.socket(sk.AF_INET,sk.SOCK_STREAM)
 		self.root = tk.Tk()
 		self.root.geometry('300x300+250+250')
-		self.et_ip = tk.Entry(self.root,text='127.0.0.1',width=30)
-		self.et_port = tk.Entry(self.root,text=4000,width=6)
+		self.et_ip = tk.Entry(self.root,textvariable='127.0.0.1',width=30)
+		self.et_port = tk.Entry(self.root,textvariable=1000,width=6)
 		self.ip_label = tk.Label(self.root,text='IP地址',width=10)
 		self.port_label = tk.Label(self.root,text='IP端口',width=10)
 
@@ -18,6 +18,8 @@ class Client:
 		self.bt_close = tk.Button(self.root,text='断开',width=5,height=1,state='disable',command=self.close)
 		self.bt_get_info = tk.Button(self.root,text='获取',width=5,height=1,state='disable',command=self.get)
 		self.data = tk.Label(self.root,text='信息...')
+		self.typer = tk.Entry(self.root,width=15)
+		self.typ_na = tk.Label(self.root,text='种类')
 	def main(self):
 		self.et_ip.place(x=3,y=5)
 		self.et_port.place(x=3,y=35)
@@ -26,13 +28,14 @@ class Client:
 		self.bt_conn.place(x=3,y=100)
 		self.bt_close.place(x=83,y=100)
 		self.bt_get_info.place(x=163,y=100)
-		self.data.place(x=5,y=150)
+		self.typer.place(x=5,y=140)
+		self.typ_na.place(x=140,y=140)
+		self.data.place(x=5,y=180)
 		self.root.mainloop()
 	def conn(self):
+		self.client.__init__()
 		self.ip = self.et_ip.get()
 		self.port = int(self.et_port.get())
-		self.data['text'] = '连接中...'
-		time.sleep(5)
 		try:
 			self.client.connect((self.ip,self.port))
 		except Exception as e:
@@ -42,10 +45,12 @@ class Client:
 			self.bt_get_info['state']='active'
 			self.data['text'] = '连接成功...'
 	def get(self):
-		self.client.send('cpu'.encode('utf-8'))
+		self.client.send(self.typer.get().encode('utf-8'))
 		self.data['text']=self.client.recv(1024).decode('utf-8')
 	def close(self):
+		self.client.shutdown(2)
 		self.client.close()
+		self.data['text']='连接断开...'
 		self.bt_close['state']='disable'
 		self.bt_get_info['state']='disable'
 client = Client()
